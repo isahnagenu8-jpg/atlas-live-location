@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Atlas — a private live location dashboard with an interactive world map and GPS coordinates.">
+  <meta name="theme-color" content="#0b1020">
+  <title>Atlas — Live Location</title>
+  <link rel="preconnect" href="https://unpkg.com"><link rel="preconnect" href="https://tile.openstreetmap.org">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Atlas home"><span class="brand-mark">✦</span><span>atlas<span class="brand-dot">.</span></span></a>
+      <div class="top-status"><span class="pulse-dot"></span><span id="topStatus">GPS not started</span></div>
+      <button class="icon-button" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">☼</button>
+    </header>
+
+    <main id="top">
+      <section class="intro">
+        <div><p class="eyebrow">YOUR WORLD, IN REAL TIME</p><h1>Find your place<br><span>in the world.</span></h1><p class="intro-copy">A live GPS dashboard that puts your location on the map. Private by design, yours to explore.</p></div>
+        <div class="globe-art" aria-hidden="true"><div class="globe-ring ring-one"></div><div class="globe-ring ring-two"></div><div class="globe">🌐</div><span class="orbit-dot"></span></div>
+      </section>
+
+      <section class="dashboard">
+        <div class="map-panel panel">
+          <div class="panel-heading map-heading"><div><p class="eyebrow">LIVE MAP</p><h2>Your position</h2></div><div class="map-actions"><button class="small-button" id="mapStyleBtn">Terrain view</button><button class="small-button" id="recenterBtn">◎ Recenter</button></div></div>
+          <div id="map" role="application" aria-label="Interactive world map"></div>
+          <div class="map-footer"><span><span class="legend-dot"></span> Your location</span><span id="mapHint">Start GPS to find yourself</span><span>© OpenStreetMap contributors</span></div>
+        </div>
+
+        <aside class="side-column">
+          <div class="panel location-panel"><div class="panel-heading"><div><p class="eyebrow">GPS STATUS</p><h2 id="statusTitle">Waiting for you</h2></div><span class="status-icon" id="statusIcon">⌖</span></div>
+            <p class="muted" id="statusMessage">Allow location access to see your live position on the map.</p>
+            <button class="primary-button" id="startBtn">⌖ &nbsp; Find my location</button>
+            <button class="text-button" id="stopBtn" disabled>Stop tracking</button>
+          </div>
+          <div class="panel coordinates-panel"><div class="panel-heading"><div><p class="eyebrow">YOUR COORDINATES</p><h2>Exact position</h2></div><span class="coordinate-symbol">⌗</span></div>
+            <div class="coordinate-row"><div><span class="coord-label">LATITUDE</span><strong id="latitude">—</strong></div><button class="copy-button" data-copy="latitude" aria-label="Copy latitude">⧉</button></div>
+            <div class="coordinate-row"><div><span class="coord-label">LONGITUDE</span><strong id="longitude">—</strong></div><button class="copy-button" data-copy="longitude" aria-label="Copy longitude">⧉</button></div>
+            <button class="secondary-button" id="copyAllBtn">Copy coordinates</button>
+          </div>
+        </aside>
+      </section>
+
+      <section class="stats-grid">
+        <div class="panel stat-card"><span class="stat-icon">◉</span><span class="stat-label">GPS ACCURACY</span><strong id="accuracy">—</strong><small>Estimated location precision</small></div>
+        <div class="panel stat-card"><span class="stat-icon">↟</span><span class="stat-label">ALTITUDE</span><strong id="altitude">—</strong><small>Above sea level</small></div>
+        <div class="panel stat-card"><span class="stat-icon">➤</span><span class="stat-label">SPEED</span><strong id="speed">—</strong><small>Current movement speed</small></div>
+        <div class="panel stat-card"><span class="stat-icon">◷</span><span class="stat-label">LAST UPDATED</span><strong id="updated">—</strong><small>Most recent GPS reading</small></div>
+      </section>
+
+      <section class="tools-grid">
+        <div class="panel tools-panel"><div class="panel-heading"><div><p class="eyebrow">QUICK ACTIONS</p><h2>Take your location with you</h2></div></div><div class="action-grid"><button class="action-card" id="shareBtn"><span>↗</span><b>Share location</b><small>Send a map link</small></button><button class="action-card" id="downloadBtn"><span>⇩</span><b>Download data</b><small>Save coordinates as JSON</small></button><button class="action-card" id="copyLinkBtn"><span>⌁</span><b>Copy map link</b><small>Open your map position</small></button></div><p class="notice" id="notice" aria-live="polite">Your location is only used in this browser. You control when tracking starts and stops.</p></div>
+        <div class="panel journey-panel"><div class="panel-heading"><div><p class="eyebrow">MOVEMENT MODE</p><h2>Your mini journey</h2></div><span class="journey-icon">✧</span></div><p class="muted">Record a short path while this page is open. Your route stays on this device.</p><div class="journey-stats"><div><strong id="distance">0.00 km</strong><small>Distance recorded</small></div><div><strong id="points">0</strong><small>GPS points</small></div><div><strong id="duration">00:00</strong><small>Session time</small></div></div><div class="journey-buttons"><button class="primary-button" id="recordBtn" disabled>● Start journey</button><button class="small-button" id="clearBtn">Clear</button></div></div>
+      </section>
+      <footer><span class="brand mini"><span class="brand-mark">✦</span> atlas<span class="brand-dot">.</span></span><span>Made for curious explorers. Keep your coordinates yours.</span><span class="footer-note">Not an emergency location service.</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>
